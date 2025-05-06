@@ -1,4 +1,4 @@
 # Project-Keoji
 SIA 2 Final Project (Blog Posting Website)
-# Andito na ko
+# Nichole was here
 # Rome was here
