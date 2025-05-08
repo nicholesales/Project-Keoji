@@ -87,11 +87,41 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
 
+:root {
+    --primary: #6d5bf1;
+    --primary-light: #8a7cf5;
+    --primary-dark: #4c6ef5;
+    --accent: #ff7b54;
+    --accent-light: #ffb26b;
+    --text-dark: #333;
+    --text-muted: #777;
+    --bg-light: #f8f9fd;
+    --bg-gradient: linear-gradient(135deg, #f8f9fd 0%, #eef1f9 100%);
+    --white: #fff;
+    --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.1);
+    --radius-sm: 0.8rem;
+    --radius-md: 1.5rem;
+    
+    /* Dark theme variables */
+    --dark-bg: #1a1c25;
+    --dark-bg-secondary: #282c34;
+    --dark-bg-tertiary: #2d3748;
+    --dark-border: #3a3f4b;
+    --dark-text: #e0e0e0;
+    --dark-text-muted: #a0a0a0;
+    --dark-shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --dark-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.25);
+    --dark-shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fd;
+    background-color: var(--bg-light);
     position: relative;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Animated background */
@@ -102,8 +132,9 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(135deg, #f8f9fd 0%, #eef1f9 100%);
+    background: var(--bg-gradient);
     overflow: hidden;
+    transition: background 0.3s ease;
 }
 
 .blog-particles:before {
@@ -117,14 +148,13 @@ body {
         radial-gradient(circle at 30% 20%, rgba(109, 91, 241, 0.05) 0%, transparent 150px),
         radial-gradient(circle at 70% 65%, rgba(76, 110, 245, 0.05) 0%, transparent 150px);
     animation: pulse 15s infinite alternate;
+    transition: background-image 0.3s ease;
 }
 
 @keyframes pulse {
     0% { transform: scale(1); }
     100% { transform: scale(1.2); }
 }
-
-
 
 /* Login card */
 .login-container {
@@ -137,7 +167,7 @@ body {
     backdrop-filter: blur(10px);
     background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    transition: all 0.5s ease;
+    transition: all 0.5s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .card:hover {
@@ -177,13 +207,14 @@ body {
     border-radius: 0.8rem;
     border: 1px solid #e0e0e0;
     padding: 1.2rem 1rem 0.6rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     background-color: #f8f9fd;
 }
 
 .form-floating label {
     padding: 1rem 1rem 0;
     color: #888;
+    transition: color 0.3s ease;
 }
 
 .input-group-animation {
@@ -215,6 +246,16 @@ body {
     color: #888;
     cursor: pointer;
     z-index: 10;
+    transition: color 0.3s ease;
+}
+
+/* Form check styling */
+.form-check-input {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-check-label {
+    transition: color 0.3s ease;
 }
 
 /* Button styling */
@@ -288,8 +329,6 @@ body {
     width: 100%;
 }
 
-
-
 /* Featured post */
 .featured-post {
     margin-top: 2rem;
@@ -298,7 +337,7 @@ body {
     background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     position: relative;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease;
     cursor: pointer;
 }
 
@@ -324,12 +363,14 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     color: #333;
+    transition: color 0.3s ease;
 }
 
 .featured-post p {
     color: #777;
     font-size: 0.9rem;
     margin-bottom: 12px;
+    transition: color 0.3s ease;
 }
 
 .featured-post a {
@@ -351,8 +392,6 @@ body {
 }
 
 /* Animations for element entrance */
-
-
 .login-form {
     animation: fadeIn 1s 0.3s both;
 }
@@ -375,8 +414,6 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-
-    
     .card {
         margin-bottom: 2rem;
     }
@@ -384,6 +421,104 @@ body {
     .featured-post {
         margin-bottom: 2rem;
     }
+}
+
+/* Dark theme styles */
+body.dark-theme {
+    color: var(--dark-text);
+}
+
+/* Adjust card styles in dark mode */
+body.dark-theme .card {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    box-shadow: var(--dark-shadow-md);
+}
+
+body.dark-theme .card-header,
+body.dark-theme .card-footer {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-border);
+}
+
+/* Form controls in dark mode */
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+    background-color: var(--dark-bg-tertiary);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+}
+
+body.dark-theme .form-floating label {
+    color: var(--dark-text-muted);
+}
+
+body.dark-theme .btn-toggle-password {
+    color: var(--dark-text-muted);
+}
+
+/* Form check in dark mode */
+body.dark-theme .form-check-input {
+    background-color: var(--dark-bg-tertiary);
+    border-color: var(--dark-border);
+}
+
+body.dark-theme .form-check-label {
+    color: var(--dark-text-muted);
+}
+
+/* Button styles in dark mode */
+body.dark-theme .btn-primary {
+    box-shadow: 0 5px 15px rgba(70, 60, 150, 0.4);
+}
+
+body.dark-theme .btn-primary:hover {
+    box-shadow: 0 8px 25px rgba(70, 60, 150, 0.5);
+}
+
+/* Featured post in dark mode */
+body.dark-theme .featured-post {
+    background-color: var(--dark-bg-secondary);
+    box-shadow: var(--dark-shadow-md);
+}
+
+body.dark-theme .featured-post h4 {
+    color: var(--dark-text);
+}
+
+body.dark-theme .featured-post p {
+    color: var(--dark-text-muted);
+}
+
+/* Text colors in dark mode */
+body.dark-theme .text-muted {
+    color: var(--dark-text-muted) !important;
+}
+
+body.dark-theme .text-dark {
+    color: var(--dark-text) !important;
+}
+
+/* Alert styling in dark mode */
+body.dark-theme .alert-danger {
+    background-color: rgba(255, 92, 92, 0.15);
+    color: #ff7a7a;
+}
+
+/* Particles background in dark mode */
+body.dark-theme .blog-particles {
+    background: linear-gradient(135deg, #1a1c25 0%, #262a3c 100%);
+}
+
+body.dark-theme .blog-particles:before {
+    background-image: 
+        radial-gradient(circle at 30% 20%, rgba(109, 91, 241, 0.1) 0%, transparent 150px),
+        radial-gradient(circle at 70% 65%, rgba(76, 110, 245, 0.1) 0%, transparent 150px);
+}
+
+/* Transition styles for smoother theme changes */
+body, body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 </style>
 
@@ -404,8 +539,17 @@ function togglePassword() {
     }
 }
 
-// Add animation to particles
+// Initialize dark mode based on stored preference
 document.addEventListener('DOMContentLoaded', function() {
+    // Check for saved dark mode preference
+    const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
+    
+    // Apply dark mode if enabled
+    if (isDarkMode) {
+        enableDarkMode();
+    }
+    
+    // Add animation to particles
     const particles = document.querySelector('.blog-particles');
     
     // Create floating particles
@@ -419,7 +563,13 @@ document.addEventListener('DOMContentLoaded', function() {
         particle.style.width = Math.random() * 5 + 3 + 'px';
         particle.style.height = particle.style.width;
         particle.style.opacity = Math.random() * 0.5;
-        particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 155) + 100}, 0.7)`;
+        
+        // Set particle color based on current theme
+        if (isDarkMode) {
+            particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 120) + 50}, 0.7)`;
+        } else {
+            particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 155) + 100}, 0.7)`;
+        }
         
         // Set animation
         const duration = Math.random() * 20 + 10;
@@ -459,6 +609,17 @@ document.addEventListener('DOMContentLoaded', function() {
             this.parentElement.classList.remove('focused');
         });
     });
+    
+    // Function to enable dark mode
+    function enableDarkMode() {
+        // Add class to body
+        document.body.classList.add('dark-theme');
+        
+        // Update particles color if they exist
+        document.querySelectorAll('.particle').forEach(particle => {
+            particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 120) + 50}, 0.7)`;
+        });
+    }
 });
 </script>
 <?= $this->endSection() ?>

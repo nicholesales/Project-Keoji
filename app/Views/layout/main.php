@@ -31,6 +31,17 @@
             --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.1);
             --radius-sm: 0.8rem;
             --radius-md: 1.5rem;
+            
+            /* Dark theme variables */
+            --dark-bg: #1a1c25;
+            --dark-bg-secondary: #282c34;
+            --dark-bg-tertiary: #2d3748;
+            --dark-border: #3a3f4b;
+            --dark-text: #e0e0e0;
+            --dark-text-muted: #a0a0a0;
+            --dark-shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --dark-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.25);
+            --dark-shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
         
         body {
@@ -40,6 +51,7 @@
             overflow-x: hidden;
             min-height: 100vh;
             color: var(--text-dark);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         /* Animated background */
@@ -52,6 +64,7 @@
             z-index: -1;
             background: var(--bg-gradient);
             overflow: hidden;
+            transition: background 0.3s ease;
         }
         
         .blog-particles:before {
@@ -65,6 +78,7 @@
                 radial-gradient(circle at 30% 20%, rgba(109, 91, 241, 0.05) 0%, transparent 150px),
                 radial-gradient(circle at 70% 65%, rgba(76, 110, 245, 0.05) 0%, transparent 150px);
             animation: pulse 15s infinite alternate;
+            transition: background-image 0.3s ease;
         }
         
         @keyframes pulse {
@@ -379,6 +393,133 @@
             50% { opacity: 0.3; }
         }
         
+        /* Dark theme styles */
+        body.dark-theme {
+            color: var(--dark-text);
+        }
+        
+        /* Adjust card styles in dark mode */
+        body.dark-theme .card {
+            background-color: var(--dark-bg-secondary);
+            border-color: var(--dark-border);
+            box-shadow: var(--dark-shadow-md);
+        }
+        
+        body.dark-theme .card-header,
+        body.dark-theme .card-footer {
+            background-color: var(--dark-bg-secondary);
+            border-color: var(--dark-border);
+        }
+        
+        /* Form controls in dark mode */
+        body.dark-theme .form-control,
+        body.dark-theme .form-select {
+            background-color: var(--dark-bg-tertiary);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        body.dark-theme .form-floating label {
+            color: var(--dark-text-muted);
+        }
+        
+        /* Button styles in dark mode */
+        body.dark-theme .btn-primary {
+            box-shadow: 0 5px 15px rgba(70, 60, 150, 0.4);
+        }
+        
+        body.dark-theme .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(70, 60, 150, 0.5);
+        }
+        
+        /* Quick action buttons in dark mode */
+        body.dark-theme .action-btn {
+            background: var(--dark-bg-tertiary);
+            color: var(--dark-text-muted);
+            box-shadow: var(--dark-shadow-sm);
+        }
+        
+        body.dark-theme .action-btn:hover {
+            color: var(--primary);
+            box-shadow: var(--dark-shadow-md);
+        }
+        
+        /* Featured post in dark mode */
+        body.dark-theme .featured-post {
+            background-color: var(--dark-bg-secondary);
+            box-shadow: var(--dark-shadow-md);
+        }
+        
+        body.dark-theme .featured-post h4 {
+            color: var(--dark-text);
+        }
+        
+        body.dark-theme .featured-post p {
+            color: var(--dark-text-muted);
+        }
+        
+        /* Security question display in dark mode */
+        body.dark-theme .question-display {
+            background-color: var(--dark-bg-tertiary);
+            border-color: var(--dark-border);
+        }
+        
+        body.dark-theme .security-text {
+            color: var(--dark-text);
+        }
+        
+        /* Alert styling in dark mode */
+        body.dark-theme .alert-danger {
+            background-color: rgba(255, 92, 92, 0.15);
+            color: #ff7a7a;
+        }
+        
+        /* Text colors in dark mode */
+        body.dark-theme .text-muted {
+            color: var(--dark-text-muted) !important;
+        }
+        
+        body.dark-theme .text-dark {
+            color: var(--dark-text) !important;
+        }
+        
+        /* Particles background in dark mode */
+        body.dark-theme .blog-particles:before {
+            background-image: 
+                radial-gradient(circle at 30% 20%, rgba(109, 91, 241, 0.1) 0%, transparent 150px),
+                radial-gradient(circle at 70% 65%, rgba(76, 110, 245, 0.1) 0%, transparent 150px);
+        }
+        
+        /* Page loader in dark mode */
+        body.dark-theme .page-loader {
+            background: var(--dark-bg);
+        }
+        
+        /* Blog card in dark mode */
+        body.dark-theme .blog-card {
+            background-color: var(--dark-bg-secondary);
+        }
+        
+        /* Dark mode scrollbar */
+        body.dark-theme::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        body.dark-theme::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+        
+        body.dark-theme::-webkit-scrollbar-thumb {
+            background-color: var(--dark-bg-tertiary);
+            border-radius: 6px;
+            border: 3px solid var(--dark-bg);
+        }
+        
+        /* Transition styles for smoother theme changes */
+        body, body * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
         /* Responsiveness */
         @media (max-width: 768px) {
             .brand-corner .brand-name {
@@ -458,80 +599,108 @@
     
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Check for saved dark mode preference
+        const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
+        
+        // Apply dark mode if enabled
+        if (isDarkMode) {
+            enableDarkMode();
+        }
+        
         // Hide loader after page loads
         setTimeout(function() {
             const loader = document.querySelector('.page-loader');
-            loader.style.opacity = '0';
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 500);
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }
         }, 800);
         
         // Add particles to background
         const particles = document.querySelector('.blog-particles');
-        
-        // Create floating particles
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement('span');
-            particle.classList.add('particle');
+        if (particles) {
+            // Create floating particles
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('span');
+                particle.classList.add('particle');
+                
+                // Random styling
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.width = Math.random() * 5 + 3 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.opacity = Math.random() * 0.5;
+                
+                // Set particle color based on current theme
+                if (isDarkMode) {
+                    particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 120) + 50}, 0.7)`;
+                } else {
+                    particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 155) + 100}, 0.7)`;
+                }
+                
+                // Set animation
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s infinite alternate`;
+                
+                particles.appendChild(particle);
+            }
             
-            // Random styling
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.top = Math.random() * 100 + 'vh';
-            particle.style.width = Math.random() * 5 + 3 + 'px';
-            particle.style.height = particle.style.width;
-            particle.style.opacity = Math.random() * 0.5;
-            particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 155) + 100}, 0.7)`;
-            
-            // Set animation
-            const duration = Math.random() * 20 + 10;
-            particle.style.animation = `float ${duration}s infinite alternate`;
-            
-            particles.appendChild(particle);
+            // Add animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                .particle {
+                    position: absolute;
+                    border-radius: 50%;
+                    pointer-events: none;
+                }
+                
+                @keyframes float {
+                    0% {
+                        transform: translate(0, 0) rotate(0deg);
+                    }
+                    100% {
+                        transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(360deg);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
         }
-        
-        // Add animation keyframes
-        const style = document.createElement('style');
-        style.textContent = `
-            .particle {
-                position: absolute;
-                border-radius: 50%;
-                pointer-events: none;
-            }
-            
-            @keyframes float {
-                0% {
-                    transform: translate(0, 0) rotate(0deg);
-                }
-                100% {
-                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(360deg);
-                }
-            }
-        `;
-        document.head.appendChild(style);
         
         // Theme toggle functionality
         const themeToggle = document.querySelector('.theme-toggle');
         if (themeToggle) {
             themeToggle.addEventListener('click', function() {
-                document.body.classList.toggle('dark-theme');
+                // Check current state
                 const isDark = document.body.classList.contains('dark-theme');
                 
                 if (isDark) {
-                    document.documentElement.style.setProperty('--bg-light', '#1a1c25');
-                    document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #1a1c25 0%, #262a3c 100%)');
-                    document.documentElement.style.setProperty('--text-dark', '#e0e0e0');
-                    document.documentElement.style.setProperty('--text-muted', '#a0a0a0');
-                    document.querySelector('.theme-toggle i').classList.replace('fa-moon', 'fa-sun');
+                    disableDarkMode();
                 } else {
-                    document.documentElement.style.setProperty('--bg-light', '#f8f9fd');
-                    document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #f8f9fd 0%, #eef1f9 100%)');
-                    document.documentElement.style.setProperty('--text-dark', '#333');
-                    document.documentElement.style.setProperty('--text-muted', '#777');
-                    document.querySelector('.theme-toggle i').classList.replace('fa-sun', 'fa-moon');
+                    enableDarkMode();
                 }
             });
         }
+        
+        // Add animations to links
+        document.querySelectorAll('a').forEach(link => {
+            if (!link.classList.contains('action-btn') && !link.classList.contains('brand-corner')) {
+                link.classList.add('hover-effect');
+            }
+        });
+        
+        // Add input focus animations
+        const inputs = document.querySelectorAll('.form-control, .form-select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+        });
         
         // Animate floating action button
         const fab = document.querySelector('.floating-action-btn');
@@ -546,12 +715,57 @@
             });
         }
         
-        // Add animations to links
-        document.querySelectorAll('a').forEach(link => {
-            if (!link.classList.contains('action-btn') && !link.classList.contains('brand-corner')) {
-                link.classList.add('hover-effect');
+        // Function to enable dark mode
+        function enableDarkMode() {
+            // Add class to body
+            document.body.classList.add('dark-theme');
+            
+            // Store preference
+            localStorage.setItem('darkMode', 'enabled');
+            
+            // Update toggle icon
+            const toggleIcon = document.querySelector('.theme-toggle i');
+            if (toggleIcon) {
+                toggleIcon.classList.replace('fa-moon', 'fa-sun');
             }
-        });
+            
+            // Set CSS variables for dark theme
+            document.documentElement.style.setProperty('--bg-light', '#1a1c25');
+            document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #1a1c25 0%, #262a3c 100%)');
+            document.documentElement.style.setProperty('--text-dark', '#e0e0e0');
+            document.documentElement.style.setProperty('--text-muted', '#a0a0a0');
+            
+            // Update particles color if they exist
+            document.querySelectorAll('.particle').forEach(particle => {
+                particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 70) + 50}, ${Math.floor(Math.random() * 120) + 50}, 0.7)`;
+            });
+        }
+        
+        // Function to disable dark mode
+        function disableDarkMode() {
+            // Remove class from body
+            document.body.classList.remove('dark-theme');
+            
+            // Remove from storage
+            localStorage.setItem('darkMode', 'disabled');
+            
+            // Update toggle icon
+            const toggleIcon = document.querySelector('.theme-toggle i');
+            if (toggleIcon) {
+                toggleIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+            
+            // Reset CSS variables for light theme
+            document.documentElement.style.setProperty('--bg-light', '#f8f9fd');
+            document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #f8f9fd 0%, #eef1f9 100%)');
+            document.documentElement.style.setProperty('--text-dark', '#333');
+            document.documentElement.style.setProperty('--text-muted', '#777');
+            
+            // Update particles color if they exist
+            document.querySelectorAll('.particle').forEach(particle => {
+                particle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 100) + 100}, ${Math.floor(Math.random() * 155) + 100}, 0.7)`;
+            });
+        }
     });
     </script>
 </body>
