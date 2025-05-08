@@ -93,30 +93,6 @@
             padding: 2rem 0;
         }
         
-        /* Floating action button */
-        .floating-action-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(108, 95, 241, 0.4);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .floating-action-btn:hover {
-            transform: translateY(-5px) rotate(90deg);
-            box-shadow: 0 8px 25px rgba(108, 95, 241, 0.5);
-        }
-        
         /* Brand icon in corner */
         .brand-corner {
             position: fixed;
@@ -201,17 +177,12 @@
             width: 100%;
         }
         
-        /* Quick actions menu */
-        .quick-actions {
+        /* Theme toggle button */
+        .theme-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .action-btn {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -226,7 +197,7 @@
             border: none;
         }
         
-        .action-btn:hover {
+        .theme-toggle:hover {
             transform: translateY(-3px);
             color: var(--primary);
             box-shadow: var(--shadow-md);
@@ -432,14 +403,14 @@
             box-shadow: 0 8px 25px rgba(70, 60, 150, 0.5);
         }
         
-        /* Quick action buttons in dark mode */
-        body.dark-theme .action-btn {
+        /* Theme toggle in dark mode */
+        body.dark-theme .theme-toggle {
             background: var(--dark-bg-tertiary);
             color: var(--dark-text-muted);
             box-shadow: var(--dark-shadow-sm);
         }
         
-        body.dark-theme .action-btn:hover {
+        body.dark-theme .theme-toggle:hover {
             color: var(--primary);
             box-shadow: var(--dark-shadow-md);
         }
@@ -525,13 +496,6 @@
             .brand-corner .brand-name {
                 display: none;
             }
-            
-            .floating-action-btn {
-                bottom: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-            }
         }
     </style>
 </head>
@@ -557,42 +521,15 @@
         <div class="brand-name">Project Keoji</div>
     </a>
     
-    <!-- Quick action buttons -->
-    <div class="quick-actions">
-        <?php if(session()->get('isLoggedIn')): ?>
-            <button class="action-btn" title="Your Profile">
-                <i class="fas fa-user"></i>
-            </button>
-            <button class="action-btn" title="Notifications">
-                <i class="fas fa-bell"></i>
-            </button>
-            <a href="<?= site_url('auth/logout') ?>" class="action-btn" title="Logout">
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
-        <?php else: ?>
-            <a href="<?= site_url('auth/login') ?>" class="action-btn" title="Login">
-                <i class="fas fa-sign-in-alt"></i>
-            </a>
-            <a href="<?= site_url('auth/register') ?>" class="action-btn" title="Register">
-                <i class="fas fa-user-plus"></i>
-            </a>
-        <?php endif; ?>
-        <button class="action-btn theme-toggle" title="Toggle Theme">
-            <i class="fas fa-moon"></i>
-        </button>
-    </div>
+    <!-- Theme toggle button -->
+    <button class="theme-toggle" title="Toggle Theme">
+        <i class="fas fa-moon"></i>
+    </button>
     
     <!-- Main content -->
     <div class="container main-content page-transition">
         <?= $this->renderSection('content') ?>
     </div>
-    
-    <!-- Floating action button -->
-    <?php if(session()->get('isLoggedIn')): ?>
-    <div class="floating-action-btn animate__animated animate__bounceIn" title="Create New Post">
-        <i class="fas fa-plus"></i>
-    </div>
-    <?php endif; ?>
     
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -685,7 +622,7 @@
         
         // Add animations to links
         document.querySelectorAll('a').forEach(link => {
-            if (!link.classList.contains('action-btn') && !link.classList.contains('brand-corner')) {
+            if (!link.classList.contains('brand-corner')) {
                 link.classList.add('hover-effect');
             }
         });
@@ -701,19 +638,6 @@
                 this.parentElement.classList.remove('focused');
             });
         });
-        
-        // Animate floating action button
-        const fab = document.querySelector('.floating-action-btn');
-        if (fab) {
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    fab.classList.add('animate__animated', 'animate__pulse');
-                    setTimeout(() => {
-                        fab.classList.remove('animate__animated', 'animate__pulse');
-                    }, 1000);
-                }
-            });
-        }
         
         // Function to enable dark mode
         function enableDarkMode() {
