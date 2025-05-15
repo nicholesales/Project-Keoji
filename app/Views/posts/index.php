@@ -73,10 +73,10 @@ echo '<!-- Debug: featuredPosts count: ' . (isset($featuredPosts) ? count($featu
                                     <span class="badge bg-info"><?= htmlspecialchars($post['category'], ENT_QUOTES, 'UTF-8') ?></span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -131,8 +131,8 @@ echo '<!-- Debug: featuredPosts count: ' . (isset($featuredPosts) ? count($featu
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-outline-primary" id="saveDraftBtn">Save as Draft</button>
-                    <button type="submit" class="btn btn-primary" id="publishBtn">Publish</button>
+                    <button type="button" class="btn btn-outline-danger" id="saveDraftBtn">Save as Draft</button>
+                    <button type="submit" class="btn btn-danger" id="publishBtn">Publish</button>
                 </div>
             </form>
         </div>
@@ -371,6 +371,66 @@ $(document).ready(function() {
                 alert('An error occurred. Status: ' + xhr.status);
             }
         });
+    });
+});
+
+$(document).ready(function() {
+    // Smooth scroll navigation for featured posts
+    $('.scroll-next').click(function() {
+        const container = $('.featured-post-container');
+        const scrollAmount = container.width() / 2;
+        container.animate({
+            scrollLeft: container.scrollLeft() + scrollAmount
+        }, 300);
+    });
+    
+    $('.scroll-prev').click(function() {
+        const container = $('.featured-post-container');
+        const scrollAmount = container.width() / 2;
+        container.animate({
+            scrollLeft: container.scrollLeft() - scrollAmount
+        }, 300);
+    });
+    
+    // Hide/show navigation buttons based on scroll position
+    function updateScrollButtons() {
+        const container = $('.featured-post-container');
+        const maxScrollLeft = container[0].scrollWidth - container[0].clientWidth;
+        
+        // Only show navigation if there's content to scroll
+        if (maxScrollLeft > 0) {
+            $('.scroll-nav').show();
+            
+            // Hide prev button if at start
+            if (container.scrollLeft() <= 0) {
+                $('.scroll-prev').fadeOut(200);
+            } else {
+                $('.scroll-prev').fadeIn(200);
+            }
+            
+            // Hide next button if at end
+            if (container.scrollLeft() >= maxScrollLeft - 10) {
+                $('.scroll-next').fadeOut(200);
+            } else {
+                $('.scroll-next').fadeIn(200);
+            }
+        } else {
+            // Hide both if no scrolling needed
+            $('.scroll-nav').hide();
+        }
+    }
+    
+    // Initial check
+    updateScrollButtons();
+    
+    // Listen for scroll events
+    $('.featured-post-container').scroll(function() {
+        updateScrollButtons();
+    });
+    
+    // Update on window resize
+    $(window).resize(function() {
+        updateScrollButtons();
     });
 });
 </script>
