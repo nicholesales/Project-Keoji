@@ -1,12 +1,8 @@
-<!-- app/Views/posts/index.php -->
 <?php 
 // Debug data
 echo '<!-- Debug: recentPosts count: ' . (isset($recentPosts) ? count($recentPosts) : 'not set') . ' -->';
 echo '<!-- Debug: featuredPosts count: ' . (isset($featuredPosts) ? count($featuredPosts) : 'not set') . ' -->';
 ?>
-<?= $this->extend('layout/posts') ?>
-
-<?= $this->section('content') ?>
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -29,7 +25,7 @@ echo '<!-- Debug: featuredPosts count: ' . (isset($featuredPosts) ? count($featu
                     <div class="post-item d-flex justify-content-between align-items-center mb-3 p-2 border-bottom">
                         <div>
                             <div class="post-title">
-                                <?= esc($post['title']) ?>
+                                <?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?>
                                 <span class="badge <?= $post['status'] === 'draft' ? 'bg-secondary' : 'bg-success' ?>">
                                     <?= $post['status'] === 'draft' ? 'Draft' : 'Published' ?>
                                 </span>
@@ -64,17 +60,17 @@ echo '<!-- Debug: featuredPosts count: ' . (isset($featuredPosts) ? count($featu
                 <?php foreach($featuredPosts as $post): ?>
                     <div class="featured-post row mb-4">
                         <div class="col-md-4">
-                            <img src="<?= base_url('uploads/posts/' . $post['image']) ?>" class="img-fluid rounded" alt="<?= esc($post['title']) ?>">
+                            <img src="<?= base_url('uploads/posts/' . $post['image']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?>">
                         </div>
                         <div class="col-md-8">
-                            <h3><?= esc($post['title']) ?></h3>
-                            <p><?= substr(esc($post['description']), 0, 200) . (strlen($post['description']) > 200 ? '...' : '') ?></p>
+                            <h3><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></h3>
+                            <p><?= substr(htmlspecialchars($post['description'], ENT_QUOTES, 'UTF-8'), 0, 200) . (strlen($post['description']) > 200 ? '...' : '') ?></p>
                             <div class="d-flex justify-content-between">
                                 <div class="text-muted">
                                     <?= date('F d, Y', strtotime($post['date_created'])) ?>
                                 </div>
                                 <div>
-                                    <span class="badge bg-info"><?= esc($post['category']) ?></span>
+                                    <span class="badge bg-info"><?= htmlspecialchars($post['category'], ENT_QUOTES, 'UTF-8') ?></span>
                                 </div>
                             </div>
                         </div>
@@ -96,6 +92,7 @@ echo '<!-- Debug: featuredPosts count: ' . (isset($featuredPosts) ? count($featu
             <form id="postForm" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" id="post_id" name="post_id">
+                    <?php echo form_hidden($this->security->get_csrf_token_name(), $this->security->get_csrf_hash()); ?>
                     
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
@@ -163,6 +160,10 @@ echo '<!-- Debug: featuredPosts count: ' . (isset($featuredPosts) ? count($featu
 
 <script>
 $(document).ready(function() {
+    // Store the CSRF token for reuse
+    const csrfToken = '<?= $this->security->get_csrf_hash() ?>';
+    const csrfName = '<?= $this->security->get_csrf_token_name() ?>';
+    
     // Clear any existing handlers to prevent duplicates
     $('#postForm').off('submit');
     $('#saveDraftBtn').off('click');
@@ -253,7 +254,10 @@ $(document).ready(function() {
         console.log('Form data:', Object.fromEntries(formData));
         
         // Determine URL based on whether this is an edit or create
-        const url = postId ? '<?= base_url('posts/update') ?>/' + postId : '<?= base_url('posts/create') ?>';
+        // Fix: Use site_url instead of base_url for proper controller routing
+        const url = postId 
+            ? '<?= site_url("PostsController/update") ?>/' + postId 
+            : '<?= site_url("PostsController/create") ?>';
         console.log('Submitting to URL:', url);
         
         // Submit form
@@ -263,6 +267,7 @@ $(document).ready(function() {
             data: formData,
             contentType: false,
             processData: false,
+            dataType: 'json',
             success: function(response) {
                 console.log('Success response:', response);
                 isSubmitting = false;
@@ -275,12 +280,23 @@ $(document).ready(function() {
                 } else {
                     // Display errors
                     console.error('Error response:', response);
-                    alert('Error: ' + JSON.stringify(response.errors || response.message));
+                    let errorMessage = 'Error: ';
+                    if (response.errors) {
+                        errorMessage += Object.values(response.errors).join('\n');
+                    } else {
+                        errorMessage += response.message || 'Unknown error';
+                    }
+                    alert(errorMessage);
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX error:', xhr.responseText);
-                alert('An error occurred. Please check console for details.');
+                console.error('AJAX error:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: error
+                });
+                alert('An error occurred. Status: ' + xhr.status + '. Please check console for details.');
                 isSubmitting = false;
                 $('#saveDraftBtn, #publishBtn').prop('disabled', false);
             }
@@ -293,7 +309,7 @@ $(document).ready(function() {
         
         // Fetch post data
         $.ajax({
-            url: '<?= base_url('posts/edit') ?>/' + postId,
+            url: '<?= site_url("PostsController/edit") ?>/' + postId,
             type: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -309,7 +325,7 @@ $(document).ready(function() {
                     $('#featured').prop('checked', post.featured == 1);
                     
                     // Show image preview
-                    $('#imagePreview').attr('src', '<?= base_url('uploads/posts') ?>/' + post.image);
+                    $('#imagePreview').attr('src', '<?= base_url("uploads/posts") ?>/' + post.image);
                     $('#imagePreviewContainer').removeClass('d-none');
                     
                     // Image not required when editing
@@ -321,8 +337,8 @@ $(document).ready(function() {
                     alert('Error: ' + response.message);
                 }
             },
-            error: function() {
-                alert('An error occurred. Please try again.');
+            error: function(xhr) {
+                alert('An error occurred. Status: ' + xhr.status);
             }
         });
     });
@@ -339,8 +355,9 @@ $(document).ready(function() {
         const postId = $(this).data('id');
         
         $.ajax({
-            url: '<?= base_url('posts/delete') ?>/' + postId,
+            url: '<?= site_url("PostsController/delete") ?>/' + postId,
             type: 'POST',
+            data: { [csrfName]: csrfToken },
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
@@ -350,12 +367,10 @@ $(document).ready(function() {
                     alert('Error: ' + response.message);
                 }
             },
-            error: function() {
-                alert('An error occurred. Please try again.');
+            error: function(xhr) {
+                alert('An error occurred. Status: ' + xhr.status);
             }
         });
     });
 });
 </script>
-
-<?= $this->endSection() ?>
